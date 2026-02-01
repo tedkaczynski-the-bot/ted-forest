@@ -337,7 +337,7 @@
 
     // Scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87a5c7);
+    scene.background = new THREE.Color(0x2a3a4a);
 
     // Camera
     const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 250);
@@ -375,14 +375,14 @@
       if (k in keys) keys[k] = false;
     });
 
-    // Lighting - DAYTIME
-    scene.fog = new THREE.Fog(0x87a5c7, 40, 120);
+    // Lighting - OVERCAST/DUSK
+    scene.fog = new THREE.Fog(0x2a3a4a, 20, 80);
     
-    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambient = new THREE.AmbientLight(0x6080a0, 0.35);
     scene.add(ambient);
 
-    const sun = new THREE.DirectionalLight(0xfffaf0, 1.2);
-    sun.position.set(50, 80, 30);
+    const sun = new THREE.DirectionalLight(0xc0a080, 0.6);
+    sun.position.set(50, 40, 30);
     sun.castShadow = true;
     sun.shadow.mapSize.width = 2048;
     sun.shadow.mapSize.height = 2048;
@@ -394,16 +394,33 @@
     sun.shadow.camera.bottom = -80;
     scene.add(sun);
 
-    const hemi = new THREE.HemisphereLight(0x87ceeb, 0x3a5a2a, 0.4);
+    const hemi = new THREE.HemisphereLight(0x4a6080, 0x1a2a1a, 0.3);
     scene.add(hemi);
 
     // Ground
     const groundGeo = new THREE.PlaneGeometry(200, 200);
-    const groundMat = new THREE.MeshLambertMaterial({ color: 0x4a7a3a });
+    const groundMat = new THREE.MeshLambertMaterial({ color: 0x2a4a2a });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.rotation.x = -Math.PI / 2;
     ground.receiveShadow = true;
     scene.add(ground);
+    
+    // Glowing beacon helper
+    function addBeacon(parent, color, height = 8, intensity = 1) {
+      const light = new THREE.PointLight(color, intensity, 25);
+      light.position.y = height;
+      parent.add(light);
+      
+      // Visible glow orb
+      const glow = new THREE.Mesh(
+        new THREE.SphereGeometry(0.3, 12, 8),
+        new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8 })
+      );
+      glow.position.y = height;
+      parent.add(glow);
+      
+      return { light, glow };
+    }
 
     // Clickables & trees
     const clickables = [];
@@ -506,14 +523,19 @@
       door.position.set(0, 1.1, 2.52);
       g.add(door);
       
-      // Windows
-      const winMat = new THREE.MeshBasicMaterial({ color: 0xffffcc });
+      // Windows (brighter glow)
+      const winMat = new THREE.MeshBasicMaterial({ color: 0xffcc66 });
       const win1 = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), winMat);
       win1.position.set(-1.8, 2.2, 2.52);
       g.add(win1);
       const win2 = win1.clone();
       win2.position.x = 1.8;
       g.add(win2);
+      
+      // Cabin warm glow
+      const cabinLight = new THREE.PointLight(0xffaa44, 1.2, 20);
+      cabinLight.position.set(0, 2.5, 4);
+      g.add(cabinLight);
       
       // Chimney
       const chimney = new THREE.Mesh(
@@ -589,6 +611,7 @@
       }
       
       g.position.set(...pos);
+      addBeacon(g, 0x80ff80, 7, 0.8);
       return g;
     }
     scene.add(createStone(projects.manifesto.pos, 'manifesto'));
@@ -613,6 +636,7 @@
       
       g.position.set(...pos);
       g.userData = { ring };
+      addBeacon(g, 0xaa66ff, 6, 1);
       return g;
     }
     const portal = createPortal(projects.clawmegle.pos, 'clawmegle');
@@ -639,6 +663,7 @@
       
       g.position.set(...pos);
       g.userData = { crystal };
+      addBeacon(g, 0x66aaff, 6, 0.8);
       return g;
     }
     const crystal = createCrystal(projects.gametheory.pos, 'gametheory');
@@ -675,6 +700,7 @@
       }
       
       g.position.set(...pos);
+      addBeacon(g, 0xffffff, 4, 0.6);
       return g;
     }
     scene.add(createChess(projects.chess.pos, 'chess'));
@@ -701,6 +727,7 @@
       }
       
       g.position.set(...pos);
+      addBeacon(g, 0xff8866, 7, 0.8);
       return g;
     }
     scene.add(createTotem(projects.avatars.pos, 'avatars'));
@@ -719,6 +746,7 @@
         g.add(coin);
       }
       g.position.set(...pos);
+      addBeacon(g, 0xffcc00, 4, 0.7);
       return g;
     }
     scene.add(createCoins(projects.tokens.pos, 'tokens'));
