@@ -907,10 +907,13 @@
       document.getElementById('info-desc').textContent = p.desc;
       document.getElementById('info-link').href = p.link;
       document.getElementById('info').classList.add('active');
+      // Release pointer lock so user can click the link
+      document.exitPointerLock();
     }
 
     function closeInfo() {
       document.getElementById('info').classList.remove('active');
+      // Re-lock when closing (user can click back into the game)
     }
     window.closeInfo = closeInfo;
 
