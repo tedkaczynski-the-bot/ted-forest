@@ -782,23 +782,40 @@
     scene.add(stump);
 
     const axeGroup = new THREE.Group();
+    
+    // Handle - longer, angled into stump
     const axeHandle = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.04, 0.05, 0.8, 6),
-      new THREE.MeshLambertMaterial({ color: 0x5a4030 })
+      new THREE.CylinderGeometry(0.035, 0.045, 1.1, 6),
+      new THREE.MeshLambertMaterial({ color: 0x6a5040 })
     );
-    axeHandle.rotation.x = Math.PI / 4;
-    axeGroup.add(axeHandle);
-    const axeHead = new THREE.Mesh(
-      new THREE.BoxGeometry(0.25, 0.15, 0.06),
-      new THREE.MeshLambertMaterial({ color: 0x808080 })
-    );
-    axeHead.position.set(0, 0.35, 0);
-    axeHead.rotation.x = Math.PI / 4;
-    axeGroup.add(axeHead);
-    axeGroup.position.set(5, 0.8, 3);
-    axeGroup.userData = { isAxe: true };
-    clickables.push(axeHandle);
+    axeHandle.position.set(0, 0.4, 0);
+    axeHandle.castShadow = true;
     axeHandle.userData = { isAxe: true };
+    clickables.push(axeHandle);
+    axeGroup.add(axeHandle);
+    
+    // Axe head - attached to top of handle
+    const axeHead = new THREE.Mesh(
+      new THREE.BoxGeometry(0.35, 0.22, 0.05),
+      new THREE.MeshLambertMaterial({ color: 0x666666 })
+    );
+    axeHead.position.set(0.12, 0.85, 0);
+    axeHead.castShadow = true;
+    axeGroup.add(axeHead);
+    
+    // Blade edge
+    const axeBlade = new THREE.Mesh(
+      new THREE.BoxGeometry(0.08, 0.26, 0.03),
+      new THREE.MeshLambertMaterial({ color: 0x888888 })
+    );
+    axeBlade.position.set(0.32, 0.85, 0);
+    axeGroup.add(axeBlade);
+    
+    // Position axe stuck in stump at angle
+    axeGroup.position.set(5, 0.6, 3);
+    axeGroup.rotation.z = -0.3;
+    axeGroup.rotation.x = 0.1;
+    axeGroup.userData = { isAxe: true };
     scene.add(axeGroup);
 
     // Raycaster
