@@ -136,13 +136,34 @@
       position: fixed;
       top: 50%;
       left: 50%;
+      width: 20px;
+      height: 20px;
       transform: translate(-50%, -50%);
       z-index: 50;
       pointer-events: none;
-      font-size: 1.5rem;
-      opacity: 0.5;
-      color: #e0e0e0;
-      text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    
+    .crosshair::before,
+    .crosshair::after {
+      content: '';
+      position: absolute;
+      background: rgba(255,255,255,0.6);
+    }
+    
+    .crosshair::before {
+      width: 2px;
+      height: 20px;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+    
+    .crosshair::after {
+      width: 20px;
+      height: 2px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
     }
     
     .action-hint {
@@ -256,7 +277,7 @@
     </div>
   </div>
   
-  <div class="crosshair">+</div>
+  <div class="crosshair"></div>
   
   <div class="hud">
     <div class="tool-indicator">
