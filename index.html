@@ -824,7 +824,7 @@
 
     // Raycaster
     const raycaster = new THREE.Raycaster();
-    raycaster.far = 5;
+    raycaster.far = 8;
 
     function toggleAxe() {
       hasAxe = !hasAxe;
@@ -937,6 +937,15 @@
       // Re-lock when closing (user can click back into the game)
     }
     window.closeInfo = closeInfo;
+
+    // Explicit explore link handler
+    document.getElementById('info-link').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const url = e.target.href;
+      if (url && url !== '#') {
+        window.open(url, '_blank');
+      }
+    });
 
     // Animation
     let time = 0;
